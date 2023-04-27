@@ -28,6 +28,9 @@ public class ExerciseEntity {
     @Field("repsPerSet")
     private int repsPerSet;
 
+    @Field("workoutId")
+    private String workoutId;
+
     @Field("type")
     private ExerciseType type;
 }

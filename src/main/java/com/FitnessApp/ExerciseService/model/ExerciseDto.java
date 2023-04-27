@@ -28,7 +28,6 @@ public class ExerciseDto {
     private String title;
 
     @NotNull
-    @NotBlank
     @Size(max = 500)
     @ApiModelProperty(name = "description", notes = "Description of the exercise", example = "Lorem ipsum...")
     private String description;
@@ -44,6 +43,9 @@ public class ExerciseDto {
     @Max(100)
     @ApiModelProperty(name = "repsPerSet", notes = "Amount of times to do each set", example = "10")
     private int repsPerSet;
+
+    @ApiModelProperty(name = "workoutId", notes = "Id of the workout this exercise belongs to", example = "123adS23")
+    private String workoutId;
 
     @NotNull
     @ApiModelProperty(name = "type", notes = "Type of the exercise", example = "Strength")

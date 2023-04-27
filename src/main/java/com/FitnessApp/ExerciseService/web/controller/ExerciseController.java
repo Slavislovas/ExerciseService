@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -54,7 +55,8 @@ public class ExerciseController {
             @ApiResponse(code = 400, message = "Bad request")
     })
     @PostMapping("/create")
-    public ResponseEntity<ExerciseDto> createExercise(@Valid @RequestBody ExerciseDto exercise, BindingResult bindingResult){
+    public ResponseEntity<ExerciseDto> createExercise(@Valid @RequestBody ExerciseDto exercise,
+                                                      BindingResult bindingResult){
         validateFields(bindingResult);
         return ResponseEntity.ok(exerciseService.createExercise(exercise));
     }

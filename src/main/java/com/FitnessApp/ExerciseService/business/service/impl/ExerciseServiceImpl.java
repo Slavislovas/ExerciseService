@@ -6,6 +6,8 @@ import com.FitnessApp.ExerciseService.business.repository.model.ExerciseEntity;
 import com.FitnessApp.ExerciseService.business.service.ExerciseService;
 import com.FitnessApp.ExerciseService.model.ExerciseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,8 +35,9 @@ public class ExerciseServiceImpl implements ExerciseService {
         return exerciseRepository.findAll().stream().map(exerciseMapStruct::entityToDto).collect(Collectors.toList());
     }
 
+    @KafkaListener(groupId = "fitnessApp", topics = "workout-exercise")
     @Override
-    public ExerciseDto createExercise(ExerciseDto exercise) {
+    public ExerciseDto createExercise(@Payload ExerciseDto exercise) {
         ExerciseEntity exerciseEntity = exerciseMapStruct.dtoToEntity(exercise);
         return exerciseMapStruct.entityToDto(exerciseRepository.save(exerciseEntity));
     }
@@ -45,9 +48,11 @@ public class ExerciseServiceImpl implements ExerciseService {
         if (exerciseEntityOptional.isEmpty()){
             throw new NoSuchElementException("Exercise with id: " + exerciseId + " does not exist");
         }
-        ExerciseEntity exerciseEntity = exerciseMapStruct.dtoToEntity(exerciseData);
-        exerciseEntity.setId(exerciseId);
-        return exerciseMapStruct.entityToDto(exerciseRepository.save(exerciseEntity));
+        ExerciseEntity exerciseEntity = exerciseEntityOptional.get();
+        ExerciseEntity convertedDto = exerciseMapStruct.dtoToEntity(exerciseData);
+        convertedDto.setId(exerciseId);
+        convertedDto.setWorkoutId(exerciseEntity.getWorkoutId());
+        return exerciseMapStruct.entityToDto(exerciseRepository.save(convertedDto));
     }
 
     @Override
