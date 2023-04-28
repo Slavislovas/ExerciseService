@@ -1,6 +1,7 @@
 package com.FitnessApp.ExerciseService.business.kafka;
 
 import com.FitnessApp.ExerciseService.model.ExerciseDto;
+import com.FitnessApp.ExerciseService.model.Message;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,16 +25,30 @@ public class KafkaConsumerConfig {
     private String groupId;
 
     @Bean
-    public ConsumerFactory<String, ExerciseDto> consumerFactory() {
+    public ConsumerFactory<String, ExerciseDto> exerciseConsumerFactory() {
         JsonDeserializer<ExerciseDto> jsonDeserializer = new JsonDeserializer<>(ExerciseDto.class, false);
         jsonDeserializer.addTrustedPackages("*");
         return new DefaultKafkaConsumerFactory<>(consumerConfigs(), new StringDeserializer(), jsonDeserializer);
     }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, ExerciseDto>> kafkaListenerContainerFactory() {
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, ExerciseDto>> exerciseKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, ExerciseDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
+        factory.setConsumerFactory(exerciseConsumerFactory());
+        return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, Message> messageConsumerFactory() {
+        JsonDeserializer<Message> jsonDeserializer = new JsonDeserializer<>(Message.class, false);
+        jsonDeserializer.addTrustedPackages("*");
+        return new DefaultKafkaConsumerFactory<>(consumerConfigs(), new StringDeserializer(), jsonDeserializer);
+    }
+
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Message>> messageKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Message> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(messageConsumerFactory());
         return factory;
     }
 

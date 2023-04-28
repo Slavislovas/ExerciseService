@@ -1,6 +1,7 @@
 package com.FitnessApp.ExerciseService.business.service;
 
 import com.FitnessApp.ExerciseService.model.ExerciseDto;
+import com.FitnessApp.ExerciseService.model.Message;
 
 import java.util.List;
 
@@ -10,4 +11,6 @@ public interface ExerciseService {
     ExerciseDto createExercise(ExerciseDto exercise);
     ExerciseDto updateExercise(String exerciseId, ExerciseDto exerciseData);
     void deleteExercise(String exerciseId);
+
+    void deleteAllExercisesByWorkoutId(Message workoutDeletionMessage);
 }
